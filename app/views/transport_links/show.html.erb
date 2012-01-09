@@ -1,0 +1,25 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Source:</b>
+  <%= @transport_link.source_id %>
+</p>
+
+<p>
+  <b>Sink:</b>
+  <%= @transport_link.sink_id %>
+</p>
+
+<p>
+  <b>Unit cost:</b>
+  <%= @transport_link.unit_cost %>
+</p>
+
+<p>
+  <b>Transport quantity:</b>
+  <%= @transport_link.transport_quantity %>
+</p>
+
+
+<%= link_to 'Edit', edit_transport_link_path(@transport_link) %> |
+<%= link_to 'Back', transport_links_path %>

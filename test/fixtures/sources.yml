@@ -1,0 +1,18 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+1fra:
+    codename: FRA
+    name: Frankfurt
+    supply_quantity: 110.0
+
+2haj:
+    codename: HAJ
+    name: Hannover
+    supply_quantity: 160.0
+
+3muc:
+    codename: MUC
+    name: München
+    supply_quantity: 120.0

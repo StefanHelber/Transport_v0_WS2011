@@ -1,0 +1,27 @@
+<h1>Listing sinks</h1>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Codename</th>
+    <th>Demand quantity</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @sinks.each do |sink| %>
+  <tr>
+    <td><%= sink.name %></td>
+    <td><%= sink.codename %></td>
+    <td><%= sink.demand_quantity %></td>
+    <td><%= link_to 'Show', sink %></td>
+    <td><%= link_to 'Edit', edit_sink_path(sink) %></td>
+    <td><%= link_to 'Destroy', sink, confirm: 'Are you sure?', method: :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Sink', new_sink_path %>

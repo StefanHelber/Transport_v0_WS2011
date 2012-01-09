@@ -1,0 +1,20 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Name:</b>
+  <%= @sink.name %>
+</p>
+
+<p>
+  <b>Codename:</b>
+  <%= @sink.codename %>
+</p>
+
+<p>
+  <b>Demand quantity:</b>
+  <%= @sink.demand_quantity %>
+</p>
+
+
+<%= link_to 'Edit', edit_sink_path(@sink) %> |
+<%= link_to 'Back', sinks_path %>

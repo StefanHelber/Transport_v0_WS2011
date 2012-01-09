@@ -1,0 +1,29 @@
+<%= form_for(@sink) do |f| %>
+  <% if @sink.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@sink.errors.count, "error") %> prohibited this sink from being saved:</h2>
+
+      <ul>
+      <% @sink.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%= f.label :codename %><br />
+    <%= f.text_field :codename %>
+  </div>
+  <div class="field">
+    <%= f.label :demand_quantity %><br />
+    <%= f.text_field :demand_quantity %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

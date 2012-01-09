@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+
+1muc:
+    codename: MUC
+    name: München
+    demand_quantity: 100.0
+
+2nue:
+    codename: NUE
+    name: Nürnberg
+    demand_quantity: 120.0
+
+3tlx:
+    codename: TLX
+    name: Berlin-Tegel
+    demand_quantity: 170.0

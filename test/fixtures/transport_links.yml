@@ -1,0 +1,56 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+fra_muc:
+  source: 1fra
+  sink: 1muc
+  unit_cost: 30.0
+  transport_quantity:
+
+fra_nue:
+  source: 1fra
+  sink: 2nue
+  unit_cost: 20
+  transport_quantity:
+
+fra_tlx:
+  source: 1fra
+  sink: 3tlx
+  unit_cost: 40
+  transport_quantity:
+
+haj_muc:
+  source: 2haj
+  sink: 1muc
+  unit_cost: 10
+  transport_quantity:
+
+haj_nue:
+  source: 2haj
+  sink: 2nue
+  unit_cost: 50
+  transport_quantity:
+
+haj_tlx:
+  source: 2haj
+  sink: 3tlx
+  unit_cost: 35
+  transport_quantity:
+
+muc_muc:
+  source: 3muc
+  sink: 1muc
+  unit_cost: 10
+  transport_quantity:
+
+muc_nue:
+  source: 3muc
+  sink: 2nue
+  unit_cost: 15
+  transport_quantity:
+
+muc_tlx:
+  source: 3muc
+  sink: 3tlx
+  unit_cost: 85
+  transport_quantity:
+

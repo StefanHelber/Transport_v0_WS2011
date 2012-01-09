@@ -1,0 +1,384 @@
+GAMS Rev 233  WEX-WEI 23.3.3 x86_64/MS Windows                                                     01/07/12 18:58:38 Page 1
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+   1  * Einfachstes Transportmodell mit Links
+   2  * Autor: SH
+   3  * Stand: 21.12.2012
+   4   
+   5   
+   6  set  i Angebotsorte
+   7       j Nachfrageorte
+   8       l Link
+   9       LI(l,i),LJ(l,j);
+  10   
+  11  parameter
+  12       A(i)    Angebot
+  13       N(j)    Nachfrage
+  14       c(l)  Kosten des Transports von i nach j;
+  15   
+  16   
+INCLUDE    C:\Sites\Transport_v0\Transportmodell_v3_Input_Instanz1.inc
+  18  set i /
+  19  i37076464
+  20  i86404465
+  21  i740534033
+  22  /
+  23   
+  24  j /
+  25  j129275258
+  26  j381620601
+  27  j791651836
+  28  /
+  29   
+  30  l /
+  31  l11687502
+  32  l35696195
+  33  l195596119
+  34  l214401551
+  35  l546149434
+  36  l572484659
+  37  l628121963
+  38  l669161828
+  39  l688239916
+  40  /;
+  41   
+  42  LI(l,i) = no;
+  43  LJ(l,j) = no;
+  44   
+  45  LI( 'l11687502', 'i37076464') = yes;
+  46  LJ( 'l11687502', 'j129275258') = yes;
+  47   
+  48  LI( 'l35696195', 'i37076464') = yes;
+  49  LJ( 'l35696195', 'j791651836') = yes;
+  50   
+  51  LI( 'l195596119', 'i740534033') = yes;
+  52  LJ( 'l195596119', 'j381620601') = yes;
+  53   
+  54  LI( 'l214401551', 'i86404465') = yes;
+  55  LJ( 'l214401551', 'j381620601') = yes;
+  56   
+  57  LI( 'l546149434', 'i740534033') = yes;
+  58  LJ( 'l546149434', 'j791651836') = yes;
+  59   
+  60  LI( 'l572484659', 'i740534033') = yes;
+  61  LJ( 'l572484659', 'j129275258') = yes;
+  62   
+  63  LI( 'l628121963', 'i86404465') = yes;
+  64  LJ( 'l628121963', 'j129275258') = yes;
+  65   
+  66  LI( 'l669161828', 'i86404465') = yes;
+  67  LJ( 'l669161828', 'j791651836') = yes;
+  68   
+  69  LI( 'l688239916', 'i37076464') = yes;
+  70  LJ( 'l688239916', 'j381620601') = yes;
+  71   
+  72   
+  73   
+GAMS Rev 233  WEX-WEI 23.3.3 x86_64/MS Windows                                                     01/07/12 18:58:38 Page 2
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+  74  Parameter
+  75    A(i) /
+  76  i37076464  110.0
+  77  i86404465  120.0
+  78  i740534033  160.0
+  79  /
+  80   
+  81   
+  82  N(j) /
+  83  j129275258  170.0
+  84  j381620601  120.0
+  85  j791651836  100.0
+  86  /
+  87   
+  88   
+  89  c(l) /
+  90  l11687502  40.0
+  91  l35696195  30.0
+  92  l195596119  50.0
+  93  l214401551  15.0
+  94  l546149434  10.0
+  95  l572484659  35.0
+  96  l628121963  85.0
+  97  l669161828  10.0
+  98  l688239916  20.0
+  99  /
+ 100   
+ 101  ;
+ 102   
+ 103  variables Z  Zielfunktionswert;
+ 104  positive variables x Transportmengen;
+ 105   
+ 106  Equations
+ 107  Zielfunktion         Das ist die Zielfunktion
+ 108  Angebot_abrufen(i)   Das Angebot muss abgerufen werden
+ 109  Nachfrage_decken(j)  Die Nachfrage muss befriedigt werden;
+ 110   
+ 111  Zielfunktion..
+ 112       Z =e=   sum(l,c(l)*x(l));
+ 113   
+ 114  Angebot_abrufen(i)..
+ 115       sum(l$LI(l,i), x(l)) =e= A(i);
+ 116   
+ 117  Nachfrage_decken(j)..
+ 118       sum(l$LJ(l,j), x(l)) =e= N(j);
+ 119   
+ 120  model transportv1 /
+ 121                   Zielfunktion
+ 122                   , Angebot_abrufen
+ 123                   , Nachfrage_decken
+ 124                   /;
+ 125   
+ 126   
+ 127  display A, N, c;
+ 128   
+ 129  solve transportv1 minimizing Z using lp;
+ 130   
+ 131  display x.l;
+ 132   
+ 133   
+ 134  file outputfile1 / 'Transportmengen_v2.txt'/;
+ 135  put outputfile1;
+ 136   
+ 137   
+ 138  loop(l,
+ 139       loop(i$LI(l,i),
+ 140           loop(j$LJ(l,j),
+ 141               put l.tl:0, ' ; ' i.tl:0, ' ; ' j.tl:0, ' ; ', x.l(l) /
+ 142           );
+ 143       );
+ 144  );
+ 145   
+ 146  putclose outputfile1;
+GAMS Rev 233  WEX-WEI 23.3.3 x86_64/MS Windows                                                     01/07/12 18:58:38 Page 3
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+C o m p i l a t i o n
+
+
+ 147   
+ 148   
+ 149   
+ 150  file outputfile2 / 'Zielfunktionswert_v2.txt'/;
+ 151  put outputfile2;
+ 152   
+ 153   
+ 154  put 'Zielfunktionswert:  ',z.l /
+ 155  put '**************************'
+ 156   
+ 157  putclose outputfile2;
+ 158   
+ 159   
+GAMS Rev 233  WEX-WEI 23.3.3 x86_64/MS Windows                                                     01/07/12 18:58:38 Page 4
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Include File Summary
+
+
+   SEQ   GLOBAL TYPE      PARENT   LOCAL  FILENAME
+
+     1        1 INPUT          0       0  C:\Sites\Transport_v0\Transportmodell_v2.gms
+     2       17 INCLUDE        1      17  .C:\Sites\Transport_v0\Transportmodell_v3_Input_Instanz1.inc
+
+
+COMPILATION TIME     =        0.000 SECONDS      3 Mb  WEX233-233 Dec 15, 2009
+GAMS Rev 233  WEX-WEI 23.3.3 x86_64/MS Windows                                                     01/07/12 18:58:38 Page 5
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+E x e c u t i o n
+
+
+----    127 PARAMETER A  Angebot
+
+i37076464  110.000,    i86404465  120.000,    i740534033 160.000
+
+
+----    127 PARAMETER N  Nachfrage
+
+j129275258 170.000,    j381620601 120.000,    j791651836 100.000
+
+
+----    127 PARAMETER c  Kosten des Transports von i nach j
+
+l11687502  40.000,    l35696195  30.000,    l195596119 50.000,    l214401551 15.000,    l546149434 10.000
+l572484659 35.000,    l628121963 85.000,    l669161828 10.000,    l688239916 20.000
+
+GAMS Rev 233  WEX-WEI 23.3.3 x86_64/MS Windows                                                     01/07/12 18:58:38 Page 6
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Equation Listing    SOLVE transportv1 Using LP From line 129
+
+
+---- Zielfunktion  =E=  Das ist die Zielfunktion
+
+Zielfunktion..  Z - 40*x(l11687502) - 30*x(l35696195) - 50*x(l195596119) - 15*x(l214401551) - 10*x(l546149434)
+     
+      - 35*x(l572484659) - 85*x(l628121963) - 10*x(l669161828) - 20*x(l688239916) =E= 0 ; (LHS = 0)
+     
+
+---- Angebot_abrufen  =E=  Das Angebot muss abgerufen werden
+
+Angebot_abrufen(i37076464)..  x(l11687502) + x(l35696195) + x(l688239916) =E= 110 ; (LHS = 0, INFES = 110 ****)
+     
+Angebot_abrufen(i86404465)..  x(l214401551) + x(l628121963) + x(l669161828) =E= 120 ; (LHS = 0, INFES = 120 ****)
+     
+Angebot_abrufen(i740534033)..  x(l195596119) + x(l546149434) + x(l572484659) =E= 160 ; (LHS = 0, INFES = 160 ****)
+     
+
+---- Nachfrage_decken  =E=  Die Nachfrage muss befriedigt werden
+
+Nachfrage_decken(j129275258)..  x(l11687502) + x(l572484659) + x(l628121963) =E= 170 ; (LHS = 0, INFES = 170 ****)
+     
+Nachfrage_decken(j381620601)..  x(l195596119) + x(l214401551) + x(l688239916) =E= 120 ; (LHS = 0, INFES = 120 ****)
+     
+Nachfrage_decken(j791651836)..  x(l35696195) + x(l546149434) + x(l669161828) =E= 100 ; (LHS = 0, INFES = 100 ****)
+     
+GAMS Rev 233  WEX-WEI 23.3.3 x86_64/MS Windows                                                     01/07/12 18:58:38 Page 7
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Column Listing      SOLVE transportv1 Using LP From line 129
+
+
+---- Z  Zielfunktionswert
+
+Z
+                (.LO, .L, .UP, .M = -INF, 0, +INF, 0)
+        1       Zielfunktion
+
+
+---- x  Transportmengen
+
+x(l11687502)
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+      -40       Zielfunktion
+        1       Angebot_abrufen(i37076464)
+        1       Nachfrage_decken(j129275258)
+
+x(l35696195)
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+      -30       Zielfunktion
+        1       Angebot_abrufen(i37076464)
+        1       Nachfrage_decken(j791651836)
+
+x(l195596119)
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+      -50       Zielfunktion
+        1       Angebot_abrufen(i740534033)
+        1       Nachfrage_decken(j381620601)
+
+REMAINING 6 ENTRIES SKIPPED
+GAMS Rev 233  WEX-WEI 23.3.3 x86_64/MS Windows                                                     01/07/12 18:58:38 Page 8
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Model Statistics    SOLVE transportv1 Using LP From line 129
+
+
+MODEL STATISTICS
+
+BLOCKS OF EQUATIONS           3     SINGLE EQUATIONS            7
+BLOCKS OF VARIABLES           2     SINGLE VARIABLES           10
+NON ZERO ELEMENTS            28
+
+
+GENERATION TIME      =        0.015 SECONDS      4 Mb  WEX233-233 Dec 15, 2009
+
+
+EXECUTION TIME       =        0.015 SECONDS      4 Mb  WEX233-233 Dec 15, 2009
+GAMS Rev 233  WEX-WEI 23.3.3 x86_64/MS Windows                                                     01/07/12 18:58:38 Page 9
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+Solution Report     SOLVE transportv1 Using LP From line 129
+
+
+               S O L V E      S U M M A R Y
+
+     MODEL   transportv1         OBJECTIVE  Z
+     TYPE    LP                  DIRECTION  MINIMIZE
+     SOLVER  CPLEX               FROM LINE  129
+
+**** SOLVER STATUS     1 Normal Completion         
+**** MODEL STATUS      1 Optimal                   
+**** OBJECTIVE VALUE             9300.0000
+
+ RESOURCE USAGE, LIMIT          0.009      1000.000
+ ITERATION COUNT, LIMIT         5    2000000000
+
+ILOG CPLEX       Nov  1, 2009 23.3.3 WEX 13908.15043 WEI x86_64/MS Windows
+Cplex 12.1.0, GAMS Link 34 
+
+LP status(1): optimal
+Optimal solution found.
+Objective :        9300.000000
+
+
+                           LOWER          LEVEL          UPPER         MARGINAL
+
+---- EQU Zielfunkt~          .              .              .             1.0000      
+
+  Zielfunktion  Das ist die Zielfunktion
+
+---- EQU Angebot_abrufen  Das Angebot muss abgerufen werden
+
+                  LOWER          LEVEL          UPPER         MARGINAL
+
+i37076464        110.0000       110.0000       110.0000        15.0000      
+i86404465        120.0000       120.0000       120.0000        10.0000      
+i740534033       160.0000       160.0000       160.0000        10.0000      
+
+---- EQU Nachfrage_decken  Die Nachfrage muss befriedigt werden
+
+                  LOWER          LEVEL          UPPER         MARGINAL
+
+j129275258       170.0000       170.0000       170.0000        25.0000      
+j381620601       120.0000       120.0000       120.0000         5.0000      
+j791651836       100.0000       100.0000       100.0000          .          
+
+                           LOWER          LEVEL          UPPER         MARGINAL
+
+---- VAR Z                 -INF         9300.0000        +INF             .          
+
+  Z  Zielfunktionswert
+
+---- VAR x  Transportmengen
+
+                  LOWER          LEVEL          UPPER         MARGINAL
+
+l11687502           .           110.0000        +INF             .          
+l35696195           .              .            +INF           15.0000      
+l195596119          .              .            +INF           35.0000      
+l214401551          .           120.0000        +INF             .          
+l546149434          .           100.0000        +INF             .          
+l572484659          .            60.0000        +INF             .          
+l628121963          .              .            +INF           50.0000      
+l669161828          .              .            +INF             .          
+l688239916          .              .            +INF            EPS         
+
+
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+GAMS Rev 233  WEX-WEI 23.3.3 x86_64/MS Windows                                                    01/07/12 18:58:38 Page 10
+G e n e r a l   A l g e b r a i c   M o d e l i n g   S y s t e m
+E x e c u t i o n
+
+
+----    131 VARIABLE x.L  Transportmengen
+
+l11687502  110.000,    l214401551 120.000,    l546149434 100.000,    l572484659  60.000
+
+
+**** REPORT FILE SUMMARY
+
+outputfile1 C:\Sites\Transport_v0\Transportmengen_v2.txt
+outputfile2 C:\Sites\Transport_v0\Zielfunktionswert_v2.txt
+
+
+EXECUTION TIME       =        0.016 SECONDS      3 Mb  WEX233-233 Dec 15, 2009
+
+
+USER: Lehrstuhl für Produktionswirtschaft            S090113:0906AK-WIN
+      Leibniz University Hannover                                DC5215
+      License for teaching and research at degree granting institutions
+
+
+**** FILE SUMMARY
+
+Input      C:\Sites\Transport_v0\Transportmodell_v2.gms
+Output     C:\Sites\Transport_v0\Transportmodell_v2.lst
